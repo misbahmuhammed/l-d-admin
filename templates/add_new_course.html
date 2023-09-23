@@ -2,10 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    
     <title>Add New Course</title>
+    <link rel="stylesheet" href="static/style.css">
+   
 </head>
 <body>
-    <h1>Add New Course</h1>
+    <!-- <h1>Add New Course</h1>
     <form method="POST">
         <label for="new_course_type">Course Type:</label>
         <input type="text" id="new_course_type" name="new_course_type" required><br>
@@ -23,7 +26,50 @@
         <input type="text" id="new_trainer_id" name="new_trainer_id" required><br>
 
         <input type="submit" value="Add Course">
-    </form>
+    </form> -->
+    <div class="container">
+        <div class="text">
+            Add New Course
+        </div>
+        <form method="POST">
+           <div class="form-row">
+              <div class="input-data">
+                <input type="text" id="new_course_type" name="new_course_type" required>
+                 <div class="underline"></div>
+                 <label for="">Course Type</label>
+              </div>
+              <div class="input-data">
+                <input type="text" id="new_course_name" name="new_course_name" required>
+                 <div class="underline"></div>
+                 <label for="">Cource Name</label>
+              </div>
+           </div>
+           <div class="form-row">
+              <div class="input-data">
+                <input type="text" id="new_duration" name="new_duration" required>
+                 <div class="underline"></div>
+                 <label for="">Duration</label>
+              </div>
+              <div class="input-data">
+                <input type="text" id="new_online_offline" name="new_online_offline" required>
+                 <div class="underline"></div>
+                 <label for="">Online/Offline</label>
+              </div>
+              <div class="input-data">
+                <input type="text" id="new_trainer_id" name="new_trainer_id" required>
+                 <div class="underline"></div>
+                 <label for="">TrainerID</label>
+              </div>
+           </div>
+           
+              <div class="form-row submit-btn">
+                 <div class="input-data">
+                    <div class="inner"></div>
+                    <input type="submit" value="submit">
+                 </div>
+              </div>
+        </form>
+        </div>
     <a href="/dashboard">Go Back to Dashboard</a>
 </body>
 </html>
