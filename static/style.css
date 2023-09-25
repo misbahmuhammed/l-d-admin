@@ -22,15 +22,7 @@ body{
   padding: 25px 40px 10px 40px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
-.container .text{
-  text-align: center;
-  font-size: 41px;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  background: -webkit-linear-gradient(right, #02ff02, #08ed7b, #56d8e4, #9f01ea);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+
 .container form{
   padding: 30px 0 0 0;
 }
@@ -114,19 +106,29 @@ form .form-row .textarea{
   transition: all 0.4s;
 }
 .submit-btn .input-data:hover .inner{
-  left: 0;
+  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+  transform: translateY(-2px);
 }
 .submit-btn .input-data input{
-  background: none;
-  border: none;
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
   color: #fff;
-  font-size: 17px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   cursor: pointer;
-  position: relative;
-  z-index: 2;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+  padding: 10px 25px;
+  text-align: center;
+  transform: translateY(0);
+  transition: transform 150ms, box-shadow 150ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
 @media (max-width: 700px) {
   .container .text{
@@ -174,4 +176,54 @@ form .form-row .textarea{
 
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
+}
+.button-3 {
+  appearance: none;
+  background-color: #2ea44f;
+  border: 1px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.button-3:focus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+.button-3:hover {
+  background-color: #2c974b;
+}
+
+.button-3:focus {
+  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+  outline: none;
+}
+
+.button-3:disabled {
+  background-color: #94d3a2;
+  border-color: rgba(27, 31, 35, .1);
+  color: rgba(255, 255, 255, .8);
+  cursor: default;
+}
+
+.button-3:active {
+  background-color: #298e46;
+  box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
 }
