@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Batch</title>
+</head>
+<body>
+    <h1>Add New Batch</h1>
+    <form method="POST" action="/add_new_batch">
+        <label for="batch_name">Batch Name:</label>
+        <input type="text" name="batch_name" required><br>
+
+        <label for="department">Department:</label>
+        <input type="text" name="department" required><br>
+
+        <input type="submit" value="Add Batch">
+    </form>
+    
+    <a href="/">Back to Home</a>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</body>
+</html>

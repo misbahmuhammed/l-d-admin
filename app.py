@@ -4,13 +4,18 @@ import os
 import zipfile
 from openpyxl import load_workbook, Workbook
 
-app = Flask(__name__)
-app.secret_key = 'misbah'
-# Define a function to read data from the master data Excel
+# Define the allowed extensions for image uploads (you can add more if needed)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# Function to check if the file extension is allowed
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Function to read data from the master data Excel
 def read_master_data():
     try:
         if os.path.exists('master_data.xlsx'):
-            df = pd.read_excel('master_data.xlsx', sheet_name='Master Data')
+            df = pd.read_excel('master_data.xlsx', sheet_name='course details')
             return df.to_dict(orient='records')
         else:
             return []  # Return an empty list if the file doesn't exist
@@ -18,89 +23,87 @@ def read_master_data():
         print(f"Error reading master data Excel: {str(e)}")
         return []
 
-# Define a function to read data from the allocated courses Excel
-def read_allocated_courses_data():
-    try:
-        if os.path.exists('allocated_courses.xlsx'):
-            df = pd.read_excel('allocated_courses.xlsx', sheet_name='Allocated Courses')
-            return df.to_dict(orient='records')
-        else:
-            return []  # Return an empty list if the file doesn't exist
-    except Exception as e:
-        print(f"Error reading allocated courses Excel: {str(e)}")
-        return []
+# Load the existing 'master_data.xlsx' file
+excel_file = 'master_data.xlsx'
+if os.path.exists(excel_file):
+    book = load_workbook(excel_file)
+else:
+    # Create a new Excel file if it doesn't exist
+    book = Workbook()
 
-# ... (rest of your code remains the same)
+# Initialize the Excel writer
+writer = pd.ExcelWriter(excel_file, engine='openpyxl', mode='w', if_sheet_exists='replace')
+writer.book = book
 
-@app.route('/allocate_course', methods=['GET', 'POST'])
-def allocate_course():
-    global selected_batch  # Declare selected_batch as global
+# @app.route('/allocate_course', methods=['GET', 'POST'])
+# def allocate_course():
+#     global selected_batch  # Declare selected_batch as global
     
-    if request.method == 'POST':
-        # Retrieve form data
-        batch = request.form.get('batch')
-        course_type = request.form.get('course_type')
-        course_name = request.form.get('course_name')
-        duration_start = request.form.get('duration_start')
-        duration_end = request.form.get('duration_end')
-        online_offline = request.form.get('online_offline')
-        trainer = request.form.get('trainer')
+#     if request.method == 'POST':
+#         # Retrieve form data
+#         batch = request.form.get('batch')
+#         course_type = request.form.get('course_type')
+#         course_name = request.form.get('course_name')
+#         duration_start = request.form.get('duration_start')
+#         duration_end = request.form.get('duration_end')
+#         online_offline = request.form.get('online_offline')
+#         trainer = request.form.get('trainer')
         
-        # Define column names
-        columns = [
-            'Batch',
-            'Course Type',
-            'Course Name',
-            'Course Duration-Start',
-            'Course Duration-End',
-            'Online/Offline',
-            'Trainer'
-        ]
+#         # Define column names
+#         columns = [
+#             'Batch',
+#             'Course Type',
+#             'Course Name',
+#             'Course Duration-Start',
+#             'Course Duration-End',
+#             'Online/Offline',
+#             'Trainer'
+#         ]
 
-        # Create a DataFrame with your data and column names
-        data = {
-            'Batch': [batch],
-            'Course Type': [course_type],
-            'Course Name': [course_name],
-            'Course Duration-Start': [duration_start],
-            'Course Duration-End': [duration_end],
-            'Online/Offline': [online_offline],
-            'Trainer': [trainer]
-        }
-        df = pd.DataFrame(data, columns=columns)
+#         # Create a DataFrame with your data and column names
+#         data = {
+#             'Batch': [batch],
+#             'Course Type': [course_type],
+#             'Course Name': [course_name],
+#             'Course Duration-Start': [duration_start],
+#             'Course Duration-End': [duration_end],
+#             'Online/Offline': [online_offline],
+#             'Trainer': [trainer]
+#         }
+#         df = pd.DataFrame(data, columns=columns)
 
-        # Append to 'allocated_courses.xlsx'
-        excel_file = 'allocated_courses.xlsx'
-        if os.path.exists(excel_file):
-            # Load the existing Excel file
-            book = load_workbook(excel_file)
-            writer = pd.ExcelWriter(excel_file, engine='openpyxl') 
-            writer.book = book
-        else:
-            # Create a new Excel file if it doesn't exist
-            writer = pd.ExcelWriter(excel_file, engine='openpyxl')
-            # Create a new workbook with a sheet named 'Allocated Courses'
-            writer.book = Workbook()
-            writer.book.active.title = 'Allocated Courses'
+#         # Append to 'allocated_courses.xlsx'
+#         excel_file = 'allocated_courses.xlsx'
+#         if os.path.exists(excel_file):
+#             # Load the existing Excel file
+#             book = load_workbook(excel_file)
+#             writer = pd.ExcelWriter(excel_file, engine='openpyxl') 
+#             writer.book = book
+#         else:
+#             # Create a new Excel file if it doesn't exist
+#             writer = pd.ExcelWriter(excel_file, engine='openpyxl')
+#             # Create a new workbook with a sheet named 'Allocated Courses'
+#             writer.book = Workbook()
+#             writer.book.active.title = 'Allocated Courses'
         
-        # Check if the 'Allocated Courses' sheet already exists
-        if 'Allocated Courses' in writer.book.sheetnames:
-            # Append the data to the existing sheet without the header
-            startrow = writer.sheets['Allocated Courses'].max_row
-            df.to_excel(writer, sheet_name='Allocated Courses', index=False, header=False, startrow=startrow)
-        else:
-            # Create the sheet and write the data with the header
-            df.to_excel(writer, sheet_name='Allocated Courses', index=False, header=True)
+#         # Check if the 'Allocated Courses' sheet already exists
+#         if 'Allocated Courses' in writer.book.sheetnames:
+#             # Append the data to the existing sheet without the header
+#             startrow = writer.sheets['Allocated Courses'].max_row
+#             df.to_excel(writer, sheet_name='Allocated Courses', index=False, header=False, startrow=startrow)
+#         else:
+#             # Create the sheet and write the data with the header
+#             df.to_excel(writer, sheet_name='Allocated Courses', index=False, header=True)
 
-        writer.save()
-        writer.close()
+#         writer.save()
+#         writer.close()
 
-    # Fetch Batch names and Course Types from master Excel and pass them to the template
-    master_data = read_master_data()
-    batch_names = [record['Batch'] for record in master_data]
-    course_types = list(set(record['Course Type'] for record in master_data))
+#     # Fetch Batch names and Course Types from master Excel and pass them to the template
+#     master_data = read_master_data()
+#     batch_names = [record['Batch'] for record in master_data]
+#     course_types = list(set(record['Course Type'] for record in master_data))
 
-    return render_template('allocate_course.html', batch_names=batch_names, course_types=course_types, master_data=master_data)
+#     return render_template('allocate_course.html', batch_names=batch_names, course_types=course_types, master_data=master_data)
 
 
 @app.route('/dashboard')
@@ -130,63 +133,74 @@ def get_course_and_trainer_options():
     return jsonify(course_names=course_names, trainers=trainers)
 
 
+# @app.route('/add_new_course', methods=['GET', 'POST'])
+# def add_new_course():
+#     if request.method == 'POST':
+#         try:
+#             # Retrieve form data
+#             new_course_type = request.form.get('new_course_type')
+#             new_course_name = request.form.get('new_course_name')
+#             new_duration = request.form.get('new_duration')
+#             new_online_offline = request.form.get('new_online_offline')
+#             new_image = request.form.get('image_url')  # Retrieve image URL
 
-@app.route('/add_new_course', methods=['GET', 'POST'])
-def add_new_course():
-    if request.method == 'POST':
-        # Retrieve form data
-        new_course_type = request.form.get('new_course_type')
-        new_course_name = request.form.get('new_course_name')
-        new_duration = request.form.get('new_duration')
-        new_online_offline = request.form.get('new_online_offline')
-        new_trainer_id = request.form.get('new_trainer_id')  # Retrieve Trainer ID
+#             # Create a DataFrame with the new course data
+#             new_course_data = {
+#                 'Course Type': [new_course_type],
+#                 'Course Name': [new_course_name],
+#                 'Duration': [new_duration],
+#                 'Online/Offline': [new_online_offline],
+#                 'Image': [new_image]  # Store the image URL
+#             }
 
-        # Create a DataFrame with the new course data
-        new_course_data = {
-            'Course Type': [new_course_type],
-            'Course Name': [new_course_name],
-            'Duration': [new_duration],
-            'Online/Offline': [new_online_offline],
-            'Trainer ID': [new_trainer_id]  # Store Trainer ID
-        }
+#             # Check if the 'course details' sheet exists and if it's empty, add column names
+#             if 'course details' in writer.book.sheetnames and writer.sheets['course details'].max_row == 0:
+#                 df_columns = [
+#                     'Course Type',
+#                     'Course Name',
+#                     'Duration',
+#                     'Online/Offline',
+#                     'Image'
+#                 ]
+#                 df = pd.DataFrame(columns=df_columns)
+#                 df.to_excel(writer, sheet_name='course details', index=False)
 
-        # Load the existing 'master_data.xlsx' file
-        book = load_workbook('master_data.xlsx')
-        writer = pd.ExcelWriter('master_data.xlsx', engine='openpyxl') 
-        writer.book = book
+#             # Write the new course data to the 'course details' sheet
+#             df = pd.DataFrame(new_course_data)
+#             df.to_excel(writer, sheet_name='course details', index=False, header=False, startrow=writer.sheets['course details'].max_row + 1)
 
-        # Check if the 'Master Data' sheet exists and if it's empty, add column names
-        if 'Master Data' in writer.book.sheetnames and writer.sheets['Master Data'].max_row == 0:
-            df_columns = [
-                'Batch',
-                'Course Type',
-                'Course Name',
-                'Course Duration-Start',
-                'Course Duration-End',
-                'Online/Offline',
-                'Trainer',
-                'Trainer ID',
-            ]
-            df = pd.DataFrame(columns=df_columns)
-            df.to_excel(writer, sheet_name='Master Data', index=False)
+#             # Save and close the writer
+#             writer.save()
+#             writer.close()
 
-        # Write the new course data to the 'Master Data' sheet
-        df = pd.DataFrame(new_course_data)
-        df.to_excel(writer, sheet_name='Master Data', index=False, header=False, startrow=writer.sheets['Master Data'].max_row + 1)
+#             # Add a success message to be displayed on the dashboard
+#             success_message = "Course added successfully!"
 
-        # Save and close the writer
-        writer.save()
-        writer.close()
+#             # Fetch data from the master data Excel
+#             master_data = read_master_data()
 
-        # Add a success message to be displayed on the dashboard
-        success_message = "Course added successfully!"
+#             return render_template('dashboard.html', master_data=master_data, success_message=success_message)
 
-        # Fetch data from the master data Excel
-        master_data = read_master_data()
+#         except Exception as e:
+#             # Handle exceptions gracefully
+#             error_message = f"An error occurred: {str(e)}"
+#             flash(error_message, 'error')
+#             return redirect('/add_new_course')  # Redirect back to the form on error
 
-        return render_template('dashboard.html', master_data=master_data, success_message=success_message)
+#     return render_template('add_new_course.html')
 
-    return render_template('add_new_course.html')
+
+
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/get_course_names', methods=['GET'])
 def get_course_names():

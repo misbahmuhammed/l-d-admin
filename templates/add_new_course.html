@@ -1,76 +1,44 @@
-<!-- add_new_course.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    
     <title>Add New Course</title>
-    <link rel="stylesheet" href="static/style.css">
-   
 </head>
 <body>
-    <!-- <h1>Add New Course</h1>
-    <form method="POST">
-        <label for="new_course_type">Course Type:</label>
-        <input type="text" id="new_course_type" name="new_course_type" required><br>
 
-        <label for="new_course_name">Course Name:</label>
-        <input type="text" id="new_course_name" name="new_course_name" required><br>
 
-        <label for="new_duration">Duration:</label>
-        <input type="text" id="new_duration" name="new_duration" required><br>
+    <h1>Add New Course</h1>
+   
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li class="success">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
 
-        <label for="new_online_offline">Online/Offline:</label>
-        <input type="text" id="new_online_offline" name="new_online_offline" required><br>
 
-        <label for="new_trainer_id">Trainer ID:</label>
-        <input type="text" id="new_trainer_id" name="new_trainer_id" required><br>
+    <form method="POST" action="/add_new_course">
+        <label for="course_type">Course Type:</label>
+        <input type="text" name="course_type" required><br>
+
+        <label for="course_name">Course Name:</label>
+        <input type="text" name="course_name" required><br>
+
+        <label for="duration">Duration:</label>
+        <input type="text" name="duration" required><br>
+
+        <label for="online_offline">Online/Offline:</label>
+        <input type="text" name="online_offline" required><br>
+
+        <label for="image_url">Image URL:</label>
+        <input type="text" name="image_url" required><br>
 
         <input type="submit" value="Add Course">
-    </form>  -->
-    <div class="container">
-        <div class="text">
-          <h1>  Add New Course</h1>
-        </div>
-        <form method="POST">
-           <div class="form-row">
-              <div class="input-data">
-                <input type="text" id="new_course_type" name="new_course_type" required>
-                 <div class="underline"></div>
-                 <label for="">Course Type</label>
-              </div>
-              <div class="input-data">
-                <input type="text" id="new_course_name" name="new_course_name" required>
-                 <div class="underline"></div>
-                 <label for="">Cource Name</label>
-              </div>
-           </div>
-           <div class="form-row">
-              <div class="input-data">
-                <input type="text" id="new_duration" name="new_duration" required>
-                 <div class="underline"></div>
-                 <label for="">Duration</label>
-              </div>
-              <div class="input-data">
-                <input type="text" id="new_online_offline" name="new_online_offline" required>
-                 <div class="underline"></div>
-                 <label for="">Online/Offline</label>
-              </div>
-              <div class="input-data">
-                <input type="text" id="new_trainer_id" name="new_trainer_id" required>
-                 <div class="underline"></div>
-                 <label for="">TrainerID</label>
-              </div>
-           </div>
-           
-              <div class="form-row submit-btn">
-                 <div class="input-data">
-                    <div class="inner"></div>
-                    <input type="submit" value="submit">
-                 </div>
-              </div>
-        </form>
-        </div>
-        
-    <a href="/dashboard" style="position: absolute; right: 10px;bottom: 10px;"><input type="button" class="button-3" role="button"value="Go back"></a>
+    </form>
+
+
+    <a href="/">Back to Home</a>
 </body>
 </html>
