@@ -1,16 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask import Flask, render_template, request, redirect, url_for, flash
+
+from flask import Flask, render_template,request, redirect, url_for,flash
 from flask_wtf import FlaskForm
 from wtforms import SelectField, DateField, SubmitField
 import pandas as pd
 
-import pandas as pd
+import os 
 
 app = Flask(__name__)
 app.secret_key = 'misbah'
-def append_to_excel(data, sheet_name):
+
+def append_to_excel(data, excel_file, sheet_name):
     try:
-        with pd.ExcelFile('master_data.xlsx') as xls:
+        with pd.ExcelFile(excel_file) as xls:
             if sheet_name in xls.sheet_names:
                 df = pd.read_excel(xls, sheet_name=sheet_name)
             else:
@@ -18,10 +19,9 @@ def append_to_excel(data, sheet_name):
     except FileNotFoundError:
         df = pd.DataFrame(columns=list(data.keys()))
 
-    df = df.append(data, ignore_index=True)
-    
-    # Save the data to the Excel file
-    with pd.ExcelWriter('master_data.xlsx', engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+    df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
+
+    with pd.ExcelWriter(excel_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
         df.to_excel(writer, sheet_name=sheet_name, index=False)
 
 
@@ -29,11 +29,11 @@ def append_to_excel(data, sheet_name):
 def index():
     return render_template('dashboard.html')
 
+
 @app.route('/add_new_course_form')
 def add_course_form():
     return render_template('add_new_course.html')
 
-# ... (previous code)
 
 @app.route('/add_new_course', methods=['POST'])
 def add_course():
@@ -51,9 +51,10 @@ def add_course():
         'Image Url': image_url
     }
 
-    append_to_excel(course_data, 'course details')
+    # Store add_course form data in 'course details' sheet
+    append_to_excel(course_data, 'master_data.xlsx', 'course details')
 
-    flash('Successfully added a new course', 'success')  # Flash success message for course
+    flash('Successfully added a new course', 'success')
 
     return render_template('add_new_course.html', message='Successfully added a new course')
 
@@ -69,9 +70,10 @@ def add_batch():
             'Department': department,
         }
 
-        append_to_excel(batch_data, 'batch details')
+        # Store add_batch form data in 'batch details' sheet
+        append_to_excel(batch_data, 'master_data.xlsx', 'batch details')
 
-        flash('Batch added successfully', 'success')  # Flash success message
+        flash('Batch added successfully', 'success')
 
     return render_template('add_new_batch.html')
 
@@ -140,10 +142,10 @@ def allocate_course():
             'End Date': end_date,
             'Trainer': trainer
         }
-
+        print(allocation_data)
 
         # Append the allocation data to 'allocated courses' sheet in 'master_data.xlsx'
-        append_to_excel(allocation_data, 'allocated courses')
+        append_to_excel(allocation_data, 'master_data.xlsx', 'allocated courses')
         
 
         flash('Course allocated successfully', 'success')  # Flash success message
