@@ -76,12 +76,6 @@ def add_batch():
     return render_template('add_new_batch.html')
 
 
-
-
-
-app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with your secret key
-
 # Define your Flask-WTF form for allocation
 class AllocationForm(FlaskForm):
     batch = SelectField('Batch', choices=[], coerce=str)
@@ -147,9 +141,11 @@ def allocate_course():
             'Trainer': trainer
         }
 
+
         # Append the allocation data to 'allocated courses' sheet in 'master_data.xlsx'
         append_to_excel(allocation_data, 'allocated courses')
         
+
         flash('Course allocated successfully', 'success')  # Flash success message
     
     return render_template('allocate_course.html', form=form,batches=batch_options, courses=course_name_options, trainers=trainer_options)
