@@ -2,9 +2,10 @@
 <html>
 <head>
     <title>Add New Batch</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Add New Batch</h1>
+    <!-- <h1>Add New Batch</h1>
     <form method="POST" action="/add_new_batch">
         <label for="batch_name">Batch Name:</label>
         <input type="text" name="batch_name" required><br>
@@ -13,9 +14,34 @@
         <input type="text" name="department" required><br>
 
         <input type="submit" value="Add Batch">
-    </form>
-    
-    <a href="/">Back to Home</a>
+    </form> -->
+    <div class="container">
+        <div class="text">
+         <h1> Add Batch</h1>
+        </div>
+        <form  method="POST" action="/add_new_batch">
+           <div class="form-row">
+              <div class="input-data">
+                <input type="text" name="batch_name" required><br>
+                 <div class="underline"></div>
+                 <label for="batch_name">Batch Name:</label>
+              </div>
+              <div class="input-data">
+                <input type="text" name="department" required><br>
+                 <div class="underline"></div>
+                 <label for="department">Department:</label>
+              </div>
+           </div>
+           
+              <div class="form-row submit-btn">
+                 <div class="input-data">
+                    <div class="inner"></div>
+                    <input type="submit"  class="button-3" value="submit">
+                 </div>
+              </div>
+        </form>
+        </div>
+  
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
